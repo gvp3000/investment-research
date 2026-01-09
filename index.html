@@ -40,6 +40,7 @@
             transition: all 0.3s;
             font-size: 1.1rem;
             position: relative;
+            cursor: pointer;
         }
 
         nav a::after {
@@ -336,11 +337,11 @@
 <body>
     <nav>
         <ul>
-            <li><a href="javascript:void(0)" onclick="showSection('home')">Home</a></li>
-            <li><a href="javascript:void(0)" onclick="showSection('research')">Research</a></li>
-            <li><a href="javascript:void(0)" onclick="showSection('portfolio')">Portfolio</a></li>
-            <li><a href="javascript:void(0)" onclick="showSection('todo')">To-Do</a></li>
-            <li><a href="javascript:void(0)" onclick="showSection('other')">Other</a></li>
+            <li><a onclick="showSection('home'); return false;">Home</a></li>
+            <li><a onclick="showSection('research'); return false;">Research</a></li>
+            <li><a onclick="showSection('portfolio'); return false;">Portfolio</a></li>
+            <li><a onclick="showSection('todo'); return false;">To-Do</a></li>
+            <li><a onclick="showSection('other'); return false;">Other</a></li>
         </ul>
     </nav>
 
