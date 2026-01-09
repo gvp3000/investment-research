@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Research Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f5f7fa;
+        }
+
+        nav {
+            background: #1a1a1a;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 1.1rem;
+        }
+
+        nav a:hover {
+            color: #4CAF50;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        section {
+            background: white;
+            margin: 2rem 0;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            opacity: 0.9;
+        }
+
+        .asset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .asset-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        .asset-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .asset-card h3 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .asset-card p {
+            opacity: 0.9;
+        }
+
+        .research-detail {
+            display: none;
+            margin-top: 2rem;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .research-detail.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .overview-section {
+            background: #e8f5e9;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .trigger-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 5px;
+        }
+
+        .trigger-box h4 {
+            color: #856404;
+            margin-bottom: 0.5rem;
+        }
+
+        .trigger-item {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .trigger-item:last-child {
+            border-bottom: none;
+        }
+
+        .blog-posts {
+            margin-top: 2rem;
+        }
+
+        .blog-post {
+            background: white;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .blog-post:hover {
+            transform: translateX(5px);
+        }
+
+        .blog-post h4 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-post .date {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-post-content {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .blog-post-content.active {
+            display: block;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: #6c757d;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+
+        .portfolio-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        .portfolio-table th {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .portfolio-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .portfolio-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .positive {
+            color: #4CAF50;
+            font-weight: 600;
+        }
+
+        .negative {
+            color: #f44336;
+            font-weight: 600;
+        }
+
+        .chart-placeholder {
+            background: #ecf0f1;
+            padding: 3rem;
+            text-align: center;
+            border-radius: 8px;
+            margin: 1rem 0;
+            color: #7f8c8d;
+        }
+
+        .add-post-btn {
+            background: #4CAF50;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .add-post-btn:hover {
+            background: #45a049;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        .modal input, .modal textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+
+        .modal button {
+            margin-top: 1rem;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="#home" onclick="showSection('home')">Home</a></li>
+            <li><a href="#research" onclick="showSection('research')">Research</a></li>
+            <li><a href="#portfolio" onclick="showSection('portfolio')">Portfolio</a></li>
+            <li><a href="#other" onclick="showSection('other')">Other</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- HOME SECTION -->
+        <section id="home" class="section-content">
+            <div class="hero">
+                <h1>Investment Research Hub</h1>
+                <p>Deep dive analysis on crypto, equities, and commodities</p>
+            </div>
+            
+            <div style="margin-top: 2rem;">
+                <h2>Market Overview</h2>
+                <p>Welcome to my investment research platform. Here I track and analyze key assets across multiple sectors including cryptocurrency, DeFi protocols, and commodities.</p>
+                
+                <h3 style="margin-top: 2rem;">Recent Updates</h3>
+                <div class="blog-post">
+                    <h4>Q1 2026 Market Outlook</h4>
+                    <div class="date">January 9, 2026</div>
+                    <p>Key trends and positioning for the quarter ahead...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- RESEARCH SECTION -->
+        <section id="research" class="section-content" style="display: none;">
+            <h2>Research Projects</h2>
+            <p>Click on any asset to view detailed research, HTF triggers, and historical analysis.</p>
+            
+            <div class="asset-grid">
+                <div class="asset-card" onclick="showResearch('btc')">
+                    <h3>BTC</h3>
+                    <p>Bitcoin</p>
+                </div>
+                <div class="asset-card" onclick="showResearch('crv')">
+                    <h3>CRV</h3>
+                    <p>Curve DAO</p>
+                </div>
+                <div class="asset-card" onclick="showResearch('cvx')">
+                    <h3>CVX</h3>
+                    <p>Convex Finance</p>
+                </div>
+                <div class="asset-card" onclick="showResearch('uranium')">
+                    <h3>Uranium</h3>
+                    <p>Commodity Analysis</p>
+                </div>
+            </div>
+
+            <!-- BTC Research Detail -->
+            <div id="btc-research" class="research-detail">
+                <button class="back-btn" onclick="hideResearch()">← Back to Research</button>
+                <h2>Bitcoin (BTC) Research</h2>
+                
+                <div class="overview-section">
+                    <h3>Current Overview</h3>
+                    <p><strong>Last Updated:</strong> January 9, 2026</p>
+                    <p><strong>Thesis:</strong> Long-term store of value with increasing institutional adoption. Watching halving cycle dynamics and macro liquidity conditions.</p>
+                    <p><strong>Current Position:</strong> 35% of portfolio allocation</p>
+                </div>
+
+                <div class="trigger-box">
+                    <h4>⚠️ HTF Action Triggers</h4>
+                    <div class="trigger-item">
+                        <strong>Buy Signal:</strong> Break above $110,000 with volume confirmation
+                    </div>
+                    <div class="trigger-item">
+                        <strong>Sell Signal:</strong> Close below 200-week MA (~$45,000)
+                    </div>
+                    <div class="trigger-item">
+                        <strong>Add to Position:</strong> RSI weekly < 30 and positive funding rates
+                    </div>
+                    <div class="trigger-item">
+                        <strong>Reduce Position:</strong> 3 consecutive weekly closes with negative funding
+                    </div>
+                </div>
+
+                <div class="chart-placeholder">
+                    [Chart Placeholder - Add your BTC price chart here]
+                </div>
+
+                <div class="blog-posts">
+                    <h3>Research Posts</h3>
+                    <button class="add-post-btn" onclick="openModal('btc')">+ Add New Post</button>
+                    
+                    <div class="blog-post" onclick="togglePost(this)">
+                        <h4>Post-Halving Analysis</h4>
+                        <div class="date">May 15, 2025</div>
+                        <p>Initial thoughts on supply dynamics...</p>
+                        <div class="blog-post-content">
+                            <p>Full analysis of the 2024 halving effects. Historical patterns suggest 12-18 month lag before peak momentum. Current hash rate stability indicates miner capitulation phase has passed. On-chain metrics showing accumulation by long-term holders.</p>
+                            <p><strong>Key Metrics:</strong></p>
+                            <ul>
+                                <li>Hash rate: 450 EH/s (stable)</li>
+                                <li>Active addresses: Growing 15% QoQ</li>
+                                <li>Exchange reserves: Declining (bullish)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="blog-post" onclick="togglePost(this)">
+                        <h4>ETF Inflow Impact</h4>
+                        <div class="date">March 10, 2025</div>
+                        <p>Analyzing institutional demand through ETF vehicles...</p>
+                        <div class="blog-post-content">
+                            <p>BlackRock and Fidelity ETFs continue to see net inflows. This represents structural bid that wasn't present in previous cycles. Conservative estimate: $2B monthly inflows need to be absorbed by supply side.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CRV Research Detail -->
+            <div id="crv-research" class="research-detail">
+                <button class="back-btn" onclick="hideResearch()">← Back to Research</button>
+                <h2>Curve DAO (CRV) Research</h2>
+                
+                <div class="overview-section">
+                    <h3>Current Overview</h3>
+                    <p><strong>Last Updated:</strong> January 9, 2026</p>
+                    <p><strong>Thesis:</strong> Core DeFi infrastructure with sustainable tokenomics. veCRV model creates strong holding incentives.</p>
+                    <p><strong>Current Position:</strong> 10% of portfolio allocation</p>
+                </div>
+
+                <div class="trigger-box">
+                    <h4>⚠️ HTF Action Triggers</h4>
+                    <div class="trigger-item">
+                        <strong>Buy Signal:</strong> TVL growth >20% with stable/increasing APY
+                    </div>
+                    <div class="trigger-item">
+                        <strong>Sell Signal:</strong> Major protocol exploit or TVL decline >40%
+                    </div>
+                    <div class="trigger-item">
+                        <strong>Monitor:</strong> veCRV lock rates and gauge voting patterns
+                    </div>
+                </div>
+
+                <div class="chart-placeholder">
+                    [Chart Placeholder - Add your CRV charts here]
+                </div>
+
+                <div class="blog-posts">
+                    <h3>Research Posts</h3>
+                    <button class="add-post-btn" onclick="openModal('crv')">+ Add New Post</button>
+                    
+                    <div class="blog-post" onclick="togglePost(this)">
+                        <h4>Q4 2025 Protocol Review</h4>
+                        <div class="date">December 20, 2025</div>
+                        <p>TVL and revenue analysis...</p>
+                        <div class="blog-post-content">
+                            <p>Curve maintains dominant position in stablecoin swaps. Revenue distribution to veCRV holders remains attractive. New pool launches showing healthy initial TVL.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CVX Research Detail -->
+            <div id="cvx-research" class="research-detail">
+                <button class="back-btn" onclick="hideResearch()">← Back to Research</button>
+                <h2>Convex Finance (CVX) Research</h2>
+                
+                <div class="overview-section">
+                    <h3>Current Overview</h3>
+                    <p><strong>Last Updated:</strong> January 9, 2026</p>
+                    <p><strong>Thesis:</strong> CRV governance layer capturing value from Curve's growth. Monitor CVX/CRV ratio.</p>
+                    <p><strong>Current Position:</strong> 8% of portfolio allocation</p>
+                </div>
+
+                <div class="trigger-box">
+                    <h4>⚠️ HTF Action Triggers</h4>
+                    <div class="trigger-item">
+                        <strong>Buy Signal:</strong> CVX/CRV ratio < 0.15 with increasing vlCVX locks
+                    </div>
+                    <div class="trigger-item">
+                        <strong>Sell Signal:</strong> Declining CVX control of CRV emissions <40%
+                    </div>
+                </div>
+
+                <div class="chart-placeholder">
+                    [Chart Placeholder - Add your CVX charts here]
+                </div>
+
+                <div class="blog-posts">
+                    <h3>Research Posts</h3>
+                    <button class="add-post-btn" onclick="openModal('cvx')">+ Add New Post</button>
+                </div>
+            </div>
+
+            <!-- Uranium Research Detail -->
+            <div id="uranium-research" class="research-detail">
+                <button class="back-btn" onclick="hideResearch()">← Back to Research</button>
+                <h2>Uranium Sector Research</h2>
+                
+                <div class="overview-section">
+                    <h3>Current Overview</h3>
+                    <p><strong>Last Updated:</strong> January 9, 2026</p>
+                    <p><strong>Thesis:</strong> Nuclear renaissance driven by AI data center demand and carbon-neutral energy push. Supply deficit expected through 2030.</p>
+                    <p><strong>Current Position:</strong> 12% of portfolio (via URA, URNM, and producers)</p>
+                </div>
+
+                <div class="trigger-box">
+                    <h4>⚠️ HTF Action Triggers</h4>
+                    <div class="trigger-item">
+                        <strong>Buy Signal:</strong> Spot price < $80/lb with reactor restart announcements
+                    </div>
+                    <div class="trigger-item">
+                        <strong>Sell Signal:</strong> Spot price > $150/lb or major supply additions
+                    </div>
+                    <div class="trigger-item">
+                        <strong>Monitor:</strong> Sprott Physical Uranium Trust premium/discount to NAV
+                    </div>
+                </div>
+
+                <div class="chart-placeholder">
+                    [Chart Placeholder - Add uranium spot price chart here]
+                </div>
+
+                <div class="blog-posts">
+                    <h3>Research Posts</h3>
+                    <button class="add-post-btn" onclick="openModal('uranium')">+ Add New Post</button>
+                    
+                    <div class="blog-post" onclick="togglePost(this)">
+                        <h4>SMR Developments</h4>
+                        <div class="date">January 5, 2026</div>
+                        <p>Small modular reactors gaining regulatory approval...</p>
+                        <div class="blog-post-content">
+                            <p>NuScale and other SMR developers making progress. Big Tech partnerships with nuclear startups indicate serious demand for baseload clean energy. This structural shift supports long-term uranium thesis.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PORTFOLIO SECTION -->
+        <section id="portfolio" class="section-content" style="display: none;">
+            <h2>Portfolio Overview</h2>
+            
+            <table class="portfolio-table">
+                <thead>
+                    <tr>
+                        <th>Asset</th>
+                        <th>Allocation</th>
+                        <th>Entry Price</th>
+                        <th>Current Price</th>
+                        <th>P&L</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>BTC</strong></td>
+                        <td>35%</td>
+                        <td>$45,000</td>
+                        <td>$105,000</td>
+                        <td class="positive">+133%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CRV</strong></td>
+                        <td>10%</td>
+                        <td>$0.85</td>
+                        <td>$1.20</td>
+                        <td class="positive">+41%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CVX</strong></td>
+                        <td>8%</td>
+                        <td>$4.50</td>
+                        <td>$5.80</td>
+                        <td class="positive">+29%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Uranium Equities</strong></td>
+                        <td>12%</td>
+                        <td>Various</td>
+                        <td>Various</td>
+                        <td class="positive">+45%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cash</strong></td>
+                        <td>35%</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 2rem;">
+                <h3>Notes</h3>
+                <p>Maintaining elevated cash position for opportunistic deployment. Focus remains on high-conviction, asymmetric opportunities with clear catalysts.</p>
+            </div>
+        </section>
+
+        <!-- OTHER SECTION -->
+        <section id="other" class="section-content" style="display: none;">
+            <h2>Other</h2>
+            <h3>Watchlist</h3>
+            <ul style="line-height: 2;">
+                <li>AI/ML Infrastructure Tokens</li>
+                <li>Real World Asset (RWA) Protocols</li>
+                <li>Emerging L1/L2 Chains</li>
+                <li>Precious Metals (Gold/Silver)</li>
+            </ul>
+
+            <h3 style="margin-top: 2rem;">Resources</h3>
+            <ul style="line-height: 2;">
+                <li><a href="#">CryptoQuant</a> - On-chain analytics</li>
+                <li><a href="#">Dune Analytics</a> - DeFi metrics</li>
+                <li><a href="#">TradingView</a> - Charting</li>
+                <li><a href="#">Token Terminal</a> - Protocol fundamentals</li>
+            </ul>
+
+            <h3 style="margin-top: 2rem;">Methodology</h3>
+            <p>My research process combines fundamental analysis, on-chain metrics, and technical analysis. I focus on asymmetric risk/reward setups with clear invalidation levels. Position sizing is based on conviction level and correlation to existing holdings.</p>
+        </section>
+    </div>
+
+    <!-- Modal for Adding Posts -->
+    <div id="postModal" class="modal">
+        <div class="modal-content">
+            <h3>Add New Research Post</h3>
+            <input type="text" id="postTitle" placeholder="Post Title">
+            <textarea id="postContent" rows="6" placeholder="Post Content"></textarea>
+            <button class="add-post-btn" onclick="savePost()">Save Post</button>
+            <button class="back-btn" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        let currentAsset = '';
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section-content').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(sectionId).style.display = 'block';
+            
+            document.querySelectorAll('.research-detail').forEach(detail => {
+                detail.classList.remove('active');
+            });
+        }
+
+        function showResearch(asset) {
+            document.querySelectorAll('.research-detail').forEach(detail => {
+                detail.classList.remove('active');
+            });
+            document.getElementById(asset + '-research').classList.add('active');
+            
+            document.querySelectorAll('.asset-grid')[0].style.display = 'none';
+            document.querySelector('#research > p').style.display = 'none';
+        }
+
+        function hideResearch() {
+            document.querySelectorAll('.research-detail').forEach(detail => {
+                detail.classList.remove('active');
+            });
+            document.querySelectorAll('.asset-grid')[0].style.display = 'grid';
+            document.querySelector('#research > p').style.display = 'block';
+        }
+
+        function togglePost(element) {
+            const content = element.querySelector('.blog-post-content');
+            content.classList.toggle('active');
+        }
+
+        function openModal(asset) {
+            currentAsset = asset;
+            document.getElementById('postModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('postModal').style.display = 'none';
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postContent').value = '';
+        }
+
+        function savePost() {
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('postContent').value;
+            
+            if (!title || !content) {
+                alert('Please fill in both title and content');
+                return;
+            }
+
+            const date = new Date().toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+
+            const postsSection = document.querySelector(`#${currentAsset}-research .blog-posts`);
+            const newPost = document.createElement('div');
+            newPost.className = 'blog-post';
+            newPost.onclick = function() { togglePost(this); };
+            newPost.innerHTML = `
+                <h4>${title}</h4>
+                <div class="date">${date}</div>
+                <p>${content.substring(0, 100)}...</p>
+                <div class="blog-post-content">
+                    <p>${content}</p>
+                </div>
+            `;
+
+            const addButton = postsSection.querySelector('.add-post-btn');
+            addButton.insertAdjacentElement('afterend', newPost);
+
+            closeModal();
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('postModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
