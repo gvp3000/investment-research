@@ -748,4 +748,161 @@
                 <li class="todo-item ${t.completed ? 'completed' : ''}">
                     <span>${escapeHtml(t.text)}</span>
                     <div>
-                        <button class="back-btn" onclick="toggleTodo(${i})">${t
+                        <button class="back-btn" onclick="toggleTodo(${i})">${t.completed ? 'Undo' : 'Complete'}</button>
+                        <button class="delete-btn" onclick="deleteTodo(${i})">Delete</button>
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section-content').forEach(s => s.style.display = 'none');
+            document.getElementById(sectionId).style.display = 'block';
+            document.querySelectorAll('.research-detail').forEach(d => d.classList.remove('active'));
+        }
+
+        function showResearch(asset) {
+            document.querySelectorAll('.research-detail').forEach(d => d.classList.remove('active'));
+            document.getElementById(asset + '-research').classList.add('active');
+            document.querySelector('.asset-grid').style.display = 'none';
+            document.querySelector('#research > p').style.display = 'none';
+        }
+
+        function hideResearch() {
+            document.querySelectorAll('.research-detail').forEach(d => d.classList.remove('active'));
+            document.querySelector('.asset-grid').style.display = 'grid';
+            document.querySelector('#research > p').style.display = 'block';
+        }
+
+        function togglePost(el) {
+            const content = el.querySelector('.blog-post-content');
+            content.classList.toggle('active');
+        }
+
+        function openModal(asset) {
+            currentAsset = asset;
+            document.getElementById('postModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('postModal').style.display = 'none';
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postContent').value = '';
+        }
+
+        async function savePost() {
+            const title = document.getElementById('postTitle').value.trim();
+            const content = document.getElementById('postContent').value.trim();
+            
+            if (!title || !content) {
+                alert('Please fill in both title and content');
+                return;
+            }
+
+            const date = new Date().toLocaleDateString('en-US', { 
+                year: 'numeric', month: 'long', day: 'numeric' 
+            });
+
+            const post = { title, content, date, id: Date.now() };
+            storageData[currentAsset].push(post);
+
+            try {
+                await window.storage.set(`posts_${currentAsset}`, JSON.stringify(storageData[currentAsset]));
+                renderPosts(currentAsset);
+                updateTotalPosts();
+                closeModal();
+            } catch (e) {
+                alert('Error saving post');
+            }
+        }
+
+        async function deletePost(event, asset, index) {
+            event.stopPropagation();
+            if (!confirm('Delete this post?')) return;
+
+            storageData[asset].splice(index, 1);
+
+            try {
+                await window.storage.set(`posts_${asset}`, JSON.stringify(storageData[asset]));
+                renderPosts(asset);
+                updateTotalPosts();
+            } catch (e) {
+                alert('Error deleting post');
+            }
+        }
+
+        function updateTotalPosts() {
+            const total = assets.reduce((sum, asset) => sum + (storageData[asset] || []).length, 0);
+            document.getElementById('totalPosts').textContent = total;
+        }
+
+        function openTodoModal() {
+            document.getElementById('todoModal').style.display = 'block';
+        }
+
+        function closeTodoModal() {
+            document.getElementById('todoModal').style.display = 'none';
+            document.getElementById('todoText').value = '';
+        }
+
+        async function saveTodo() {
+            const text = document.getElementById('todoText').value.trim();
+            if (!text) {
+                alert('Please enter a task');
+                return;
+            }
+
+            try {
+                const result = await window.storage.get('todos');
+                const todos = result ? JSON.parse(result.value) : [];
+                todos.push({ text, completed: false, id: Date.now() });
+                await window.storage.set('todos', JSON.stringify(todos));
+                renderTodos(todos);
+                closeTodoModal();
+            } catch (e) {
+                alert('Error saving todo');
+            }
+        }
+
+        async function toggleTodo(index) {
+            try {
+                const result = await window.storage.get('todos');
+                const todos = result ? JSON.parse(result.value) : [];
+                todos[index].completed = !todos[index].completed;
+                await window.storage.set('todos', JSON.stringify(todos));
+                renderTodos(todos);
+            } catch (e) {
+                alert('Error updating todo');
+            }
+        }
+
+        async function deleteTodo(index) {
+            if (!confirm('Delete this task?')) return;
+
+            try {
+                const result = await window.storage.get('todos');
+                const todos = result ? JSON.parse(result.value) : [];
+                todos.splice(index, 1);
+                await window.storage.set('todos', JSON.stringify(todos));
+                renderTodos(todos);
+            } catch (e) {
+                alert('Error deleting todo');
+            }
+        }
+
+        window.onclick = function(event) {
+            if (event.target.id === 'postModal') closeModal();
+            if (event.target.id === 'todoModal') closeTodoModal();
+        }
+
+        loadPosts();
+        loadTodos();
+    </script>
+</body>
+</html>
