@@ -33,17 +33,19 @@
             flex-wrap: wrap;
         }
 
-        nav a {
-            text-decoration: none;
+        nav button {
+            background: none;
+            border: none;
             color: #fff;
             font-weight: 500;
-            transition: all 0.3s;
             font-size: 1.1rem;
-            position: relative;
             cursor: pointer;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: all 0.3s;
         }
 
-        nav a::after {
+        nav button::after {
             content: '';
             position: absolute;
             bottom: -5px;
@@ -54,18 +56,23 @@
             transition: width 0.3s;
         }
 
-        nav a:hover::after { width: 100%; }
-        nav a:hover { color: #4CAF50; }
+        nav button:hover::after { width: 100%; }
+        nav button:hover { color: #4CAF50; }
+        nav button.active { color: #4CAF50; }
+        nav button.active::after { width: 100%; }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
 
-        section {
+        .page-section {
+            display: none;
             background: white;
             margin: 2rem 0;
             padding: 2.5rem;
             border-radius: 16px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.1);
         }
+
+        .page-section.active { display: block; }
 
         h1 { font-size: 2.5rem; margin-bottom: 1rem; }
         h2 {
@@ -85,6 +92,7 @@
             color: white;
             border-radius: 16px;
             box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+            margin-bottom: 2rem;
         }
 
         .stats-grid {
@@ -329,7 +337,7 @@
 
         @media (max-width: 768px) {
             nav ul { gap: 1.5rem; }
-            nav a { font-size: 1rem; }
+            nav button { font-size: 1rem; }
             .asset-grid { grid-template-columns: 1fr; }
         }
     </style>
@@ -337,65 +345,47 @@
 <body>
     <nav>
         <ul>
-            <li><a onclick="showSection('home'); return false;">Home</a></li>
-            <li><a onclick="showSection('research'); return false;">Research</a></li>
-            <li><a onclick="showSection('portfolio'); return false;">Portfolio</a></li>
-            <li><a onclick="showSection('todo'); return false;">To-Do</a></li>
-            <li><a onclick="showSection('other'); return false;">Other</a></li>
+            <li><button onclick="switchPage('research')" id="nav-research">Research</button></li>
+            <li><button onclick="switchPage('home')" id="nav-home">Home</button></li>
+            <li><button onclick="switchPage('portfolio')" id="nav-portfolio">Portfolio</button></li>
+            <li><button onclick="switchPage('todo')" id="nav-todo">To-Do</button></li>
+            <li><button onclick="switchPage('other')" id="nav-other">Other</button></li>
         </ul>
     </nav>
 
     <div class="container">
-        <section id="home" class="section-content">
+        <!-- RESEARCH SECTION (Default Homepage) -->
+        <div id="page-research" class="page-section active">
             <div class="hero">
                 <h1>Investment Research Hub</h1>
                 <p>Deep dive analysis on crypto, DeFi, commodities, and robotics</p>
             </div>
-            
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <span class="stat-value">5</span>
-                    <span class="stat-label">Active Positions</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-value">+87%</span>
-                    <span class="stat-label">Portfolio Return</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-value">65%</span>
-                    <span class="stat-label">Deployed Capital</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-value" id="totalPosts">0</span>
-                    <span class="stat-label">Research Posts</span>
-                </div>
-            </div>
-        </section>
 
-        <section id="research" class="section-content" style="display: none;">
-            <h2>Research Projects</h2>
-            <p>Click on any asset to view detailed research, current prices, HTF analysis, and action triggers.</p>
-            
-            <div class="asset-grid">
-                <div class="asset-card" onclick="showResearch('btc')">
-                    <h3>BTC</h3>
-                    <p>Bitcoin</p>
-                </div>
-                <div class="asset-card" onclick="showResearch('crv')">
-                    <h3>CRV</h3>
-                    <p>Curve DAO</p>
-                </div>
-                <div class="asset-card" onclick="showResearch('cvx')">
-                    <h3>CVX</h3>
-                    <p>Convex Finance</p>
-                </div>
-                <div class="asset-card" onclick="showResearch('uranium')">
-                    <h3>Uranium</h3>
-                    <p>Nuclear Energy</p>
-                </div>
-                <div class="asset-card" onclick="showResearch('robotics')">
-                    <h3>Robotics</h3>
-                    <p>Automation & AI</p>
+            <div id="research-home">
+                <h2>Research Projects</h2>
+                <p>Click on any asset to view detailed research, current prices, HTF analysis, and action triggers.</p>
+                
+                <div class="asset-grid">
+                    <div class="asset-card" onclick="showResearch('btc')">
+                        <h3>BTC</h3>
+                        <p>Bitcoin</p>
+                    </div>
+                    <div class="asset-card" onclick="showResearch('crv')">
+                        <h3>CRV</h3>
+                        <p>Curve DAO</p>
+                    </div>
+                    <div class="asset-card" onclick="showResearch('cvx')">
+                        <h3>CVX</h3>
+                        <p>Convex Finance</p>
+                    </div>
+                    <div class="asset-card" onclick="showResearch('uranium')">
+                        <h3>Uranium</h3>
+                        <p>Nuclear Energy</p>
+                    </div>
+                    <div class="asset-card" onclick="showResearch('robotics')">
+                        <h3>Robotics</h3>
+                        <p>Automation & AI</p>
+                    </div>
                 </div>
             </div>
 
@@ -587,9 +577,42 @@
                     <div id="robotics-posts-container"></div>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <section id="portfolio" class="section-content" style="display: none;">
+        <!-- HOME SECTION -->
+        <div id="page-home" class="page-section">
+            <div class="hero">
+                <h1>Investment Research Hub</h1>
+                <p>Deep dive analysis on crypto, DeFi, commodities, and robotics</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-value">5</span>
+                    <span class="stat-label">Active Positions</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">+87%</span>
+                    <span class="stat-label">Portfolio Return</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">65%</span>
+                    <span class="stat-label">Deployed Capital</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="totalPosts">0</span>
+                    <span class="stat-label">Research Posts</span>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <h2>Market Overview</h2>
+                <p>Welcome to my investment research platform. Tracking key assets across crypto, DeFi protocols, and commodities with detailed HTF analysis.</p>
+            </div>
+        </div>
+
+        <!-- PORTFOLIO SECTION -->
+        <div id="page-portfolio" class="page-section">
             <h2>Portfolio Overview</h2>
             
             <table class="portfolio-table">
@@ -647,18 +670,20 @@
                     </tr>
                 </tbody>
             </table>
-        </section>
+        </div>
 
-        <section id="todo" class="section-content" style="display: none;">
+        <!-- TODO SECTION -->
+        <div id="page-todo" class="page-section">
             <h2>To-Do List</h2>
             <p>Track website improvements and research tasks</p>
             
             <button class="add-post-btn" onclick="openTodoModal()">+ Add To-Do</button>
             
             <ul class="todo-list" id="todo-list"></ul>
-        </section>
+        </div>
 
-        <section id="other" class="section-content" style="display: none;">
+        <!-- OTHER SECTION -->
+        <div id="page-other" class="page-section">
             <h2>Other</h2>
             <h3>Watchlist</h3>
             <ul style="line-height: 2;">
@@ -674,7 +699,7 @@
                 <li>CryptoQuant - On-chain</li>
                 <li>Token Terminal - Fundamentals</li>
             </ul>
-        </section>
+        </div>
     </div>
 
     <div id="postModal" class="modal">
@@ -700,6 +725,43 @@
         let currentAsset = '';
         const storageData = {};
         const assets = ['btc', 'crv', 'cvx', 'uranium', 'robotics'];
+
+        function switchPage(pageName) {
+            // Hide all pages
+            document.querySelectorAll('.page-section').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById('page-' + pageName).classList.add('active');
+            
+            // Update nav active state
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById('nav-' + pageName).classList.add('active');
+            
+            // If switching to research, make sure we're on the asset grid
+            if (pageName === 'research') {
+                hideResearch();
+            }
+        }
+
+        function showResearch(asset) {
+            document.getElementById('research-home').style.display = 'none';
+            document.querySelectorAll('.research-detail').forEach(d => d.classList.remove('active'));
+            document.getElementById(asset + '-research').classList.add('active');
+        }
+
+        function hideResearch() {
+            document.getElementById('research-home').style.display = 'block';
+            document.querySelectorAll('.research-detail').forEach(d => d.classList.remove('active'));
+        }
+
+        function togglePost(el) {
+            const content = el.querySelector('.blog-post-content');
+            content.classList.toggle('active');
+        }
 
         async function loadPosts() {
             let total = 0;
@@ -760,30 +822,6 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
-        }
-
-        function showSection(sectionId) {
-            document.querySelectorAll('.section-content').forEach(s => s.style.display = 'none');
-            document.getElementById(sectionId).style.display = 'block';
-            document.querySelectorAll('.research-detail').forEach(d => d.classList.remove('active'));
-        }
-
-        function showResearch(asset) {
-            document.querySelectorAll('.research-detail').forEach(d => d.classList.remove('active'));
-            document.getElementById(asset + '-research').classList.add('active');
-            document.querySelector('.asset-grid').style.display = 'none';
-            document.querySelector('#research > p').style.display = 'none';
-        }
-
-        function hideResearch() {
-            document.querySelectorAll('.research-detail').forEach(d => d.classList.remove('active'));
-            document.querySelector('.asset-grid').style.display = 'grid';
-            document.querySelector('#research > p').style.display = 'block';
-        }
-
-        function togglePost(el) {
-            const content = el.querySelector('.blog-post-content');
-            content.classList.toggle('active');
         }
 
         function openModal(asset) {
@@ -902,6 +940,7 @@
             if (event.target.id === 'todoModal') closeTodoModal();
         }
 
+        // Initialize
         loadPosts();
         loadTodos();
     </script>
